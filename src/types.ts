@@ -4,6 +4,7 @@ export interface Post {
   category: string;
   description: string;
   imageUrl: string;
+  linkUrl?: string;
   createdAt: string;
 }
 

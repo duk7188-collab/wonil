@@ -4,10 +4,11 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Menu, X, ChevronRight, Layout, Database, Settings as SettingsIcon, 
-  Plus, Trash2, Save, LogOut, ExternalLink, Mail, Phone, MapPin,
+  Plus, Trash2, Save, LogOut, ExternalLink, Mail, Phone, MapPin, Printer, Clock,
   Instagram, Globe, Cpu, Layers, ShieldCheck, ArrowRight
 } from 'lucide-react';
 import { Post, Settings } from './types';
@@ -45,13 +46,13 @@ const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
 
   const navLinks = [
     { name: '홈', href: '#home' },
-    { name: '서비스', href: '#services' },
-    { name: '포트폴리오', href: '#portfolio' },
+    { name: '회사소개', href: '#about' },
+    { name: '사업 영역', href: '#portfolio' },
     { name: '문의하기', href: '#contact' },
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/80 backdrop-blur-md py-4 border-b border-white/10' : 'bg-transparent py-6'}`}>
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-brand-blue/90 backdrop-blur-md py-4 border-b border-white/10 shadow-lg' : 'bg-transparent py-6'}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
@@ -59,7 +60,7 @@ const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
           className="text-2xl font-bold tracking-tighter flex items-center gap-3"
         >
           <Logo className="w-16 h-8" />
-          <span>원일<span className="text-brand-purple"> 인더스트리</span></span>
+          <span>원일<span className="text-brand-orange"> 인더스트리</span></span>
         </motion.div>
 
         {/* Desktop Menu */}
@@ -94,7 +95,7 @@ const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-black border-b border-white/10 overflow-hidden"
+            className="md:hidden bg-brand-blue border-b border-white/10 overflow-hidden"
           >
             <div className="flex flex-col p-6 gap-4">
               {navLinks.map((link) => (
@@ -124,6 +125,17 @@ const Navbar = ({ onAdminClick }: { onAdminClick: () => void }) => {
 const Hero = () => {
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+      {/* Background Image with Blur */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://tse2.mm.bing.net/th/id/OIP.FfZ7X81D0YrBi5hK7I20oAHaEG?rs=1&pid=ImgDetMain&o=7&rm=3" 
+          alt="Wonil Access Floor System" 
+          className="w-full h-full object-cover opacity-70 blur-none scale-100"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-blue/60 via-brand-blue/30 to-brand-blue/60" />
+      </div>
+
       {/* Background Glows */}
       <div className="absolute top-1/4 -left-20 w-96 h-96 bg-brand-purple/20 rounded-full blur-[120px] animate-pulse" />
       <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-brand-purple/10 rounded-full blur-[120px] animate-pulse delay-700" />
@@ -137,17 +149,16 @@ const Hero = () => {
           <span className="inline-block py-1 px-3 rounded-full bg-brand-purple/10 border border-brand-purple/20 text-brand-purple-light text-xs font-bold tracking-widest uppercase mb-6">
             Premium Access Floor Components
           </span>
-          <h1 className="text-5xl md:text-8xl font-bold tracking-tighter mb-8 leading-[1.1]">
+          <h1 className="text-5xl md:text-8xl font-bold tracking-tighter mb-8 leading-[1.1] drop-shadow-lg">
             공간의 가치를 높이는<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple-light to-brand-purple">혁신적인 바닥재 솔루션</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple-light to-brand-purple">이중바닥재 부품 전문기업</span>
           </h1>
-          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
-            원일인더스트리는 20년 이상의 기술력을 바탕으로 고품질 이중바닥재 부품을 제조합니다. 
-            안정성, 내구성, 그리고 디자인까지 완벽한 공간을 약속합니다.
+          <p className="text-lg md:text-xl text-white/60 max-w-3xl mx-auto mb-10 leading-relaxed">
+            ㈜원일인더스트리는 이중바닥재(Access Floor) 시스템의 핵심 부품을 전문적으로 생산하는 기업으로, 정밀 가공 기술과 품질 중심 경영을 바탕으로 국내외 건설 및 클린룸, 데이터센터, 반도체 산업에 최적의 솔루션을 제공하고 있습니다.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="#portfolio" className="w-full sm:w-auto px-8 py-4 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-full font-bold transition-all flex items-center justify-center gap-2 purple-glow">
-              포트폴리오 보기 <ChevronRight className="w-4 h-4" />
+              사업 영역 <ChevronRight className="w-4 h-4" />
             </a>
             <a href="#contact" className="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full font-bold transition-all">
               문의하기
@@ -170,45 +181,124 @@ const Hero = () => {
   );
 };
 
-const Services = () => {
-  const services = [
-    {
-      icon: <Cpu className="w-8 h-8 text-brand-purple" />,
-      title: "정밀 부품 제조",
-      desc: "최첨단 다이캐스팅 공법을 통해 오차 없는 정밀한 이중바닥재 부품을 생산합니다."
-    },
-    {
-      icon: <Layers className="w-8 h-8 text-brand-purple" />,
-      title: "시스템 설계 지원",
-      desc: "현장 상황에 최적화된 바닥재 시스템 설계 및 기술 컨설팅 서비스를 제공합니다."
-    },
-    {
-      icon: <ShieldCheck className="w-8 h-8 text-brand-purple" />,
-      title: "품질 보증 시스템",
-      desc: "엄격한 하중 테스트와 내구성 검증을 통과한 제품만을 공급하여 안전을 보장합니다."
-    }
+const CompanyIntro = () => {
+  const history = [
+    { year: "2026", event: "AI 데이터센터 전용 내진용, 고하중 이중바닥재 부품 개발" },
+    { year: "2025", event: "내진 성능이 개선된 액세스 플로어 구조 특허출원" },
+    { year: "2025", event: "㈜원일인더스트리 법인 설립 및 공장 확장 이전" },
+    { year: "2024", event: "AI 데이터센터 전용 고하중 이중바닥재 부품 개발" },
+    { year: "2014", event: "ISO9001, ISO14001 인증 획득" },
+    { year: "2009", event: "신월성 원자력 1호기 현장 납품" },
+    { year: "2008", event: "10월 원일산업 설립" },
+  ];
+
+  const certs = [
+    { title: "ISO 9001", desc: "품질경영시스템 인증" },
+    { title: "ISO 14001", desc: "환경경영시스템 인증" },
+    { title: "KS 인증", desc: "한국산업표준 제품 인증" },
+    { title: "이노비즈", desc: "기술혁신형 중소기업 인증" },
   ];
 
   return (
-    <section id="services" className="py-24 bg-white/[0.02]">
+    <section id="about" className="py-24 bg-brand-blue-dark/20">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">우리의 서비스</h2>
-          <div className="w-20 h-1 bg-brand-purple mx-auto rounded-full" />
+        <div className="text-center mb-20">
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">회사 소개</h2>
+          <div className="w-20 h-1 bg-brand-orange mx-auto rounded-full" />
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {services.map((service, idx) => (
-            <motion.div
-              key={idx}
-              whileHover={{ y: -10 }}
-              className="glass-card p-10 purple-glow-hover transition-all"
+        <div className="space-y-24">
+          {/* CEO Message */}
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative aspect-[8/5] rounded-3xl overflow-hidden glass-card"
             >
-              <div className="mb-6">{service.icon}</div>
-              <h3 className="text-2xl font-bold mb-4">{service.title}</h3>
-              <p className="text-white/50 leading-relaxed">{service.desc}</p>
+              <img 
+                src="https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202205/20/1687d98d-3d2d-41d4-bcd0-5256ead91786.jpg" 
+                alt="CEO" 
+                className="w-full h-full object-cover opacity-80"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-blue via-transparent to-transparent" />
             </motion.div>
-          ))}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-6"
+            >
+              <h3 className="text-3xl font-bold text-brand-orange">CEO 인사말</h3>
+              <p className="text-xl text-white/80 leading-relaxed italic">
+                "정밀함이 만드는 안전, 기술이 만드는 미래"
+              </p>
+              <p className="text-white/60 leading-relaxed">
+                안녕하십니까. ㈜원일인더스트리 홈페이지를 찾아주신 여러분을 진심으로 환영합니다.<br /><br />
+                저희는 창립 이래 이중바닥재 부품 분야에서 오직 한 길만을 걸어오며, 보이지 않는 곳에서 공간의 안전과 가치를 지탱해왔습니다. 
+                급변하는 산업 환경 속에서도 변치 않는 품질과 혁신적인 기술력으로 고객 여러분의 신뢰에 보답하겠습니다.<br /><br />
+                단순한 부품 제조를 넘어, 인류의 삶을 담는 공간의 기초를 더욱 단단히 다지는 기업이 될 것을 약속드립니다.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Detailed History */}
+          <div className="space-y-12">
+            <h3 className="text-3xl font-bold text-center">상세 연혁</h3>
+            <div className="relative">
+              <div className="absolute left-1/2 -translate-x-1/2 h-full w-px bg-white/10 hidden md:block" />
+              <div className="space-y-12">
+                {history.map((item, idx) => (
+                  <motion.div 
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className={`flex flex-col md:flex-row items-center gap-8 ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                  >
+                    <div className="flex-1 text-center md:text-right">
+                      {idx % 2 === 0 ? (
+                        <div className="md:pr-12">
+                          <span className="text-4xl font-black text-brand-orange/20 block mb-2">{item.year}</span>
+                          <p className="text-lg font-bold">{item.event}</p>
+                        </div>
+                      ) : null}
+                    </div>
+                    <div className="w-4 h-4 rounded-full bg-brand-orange relative z-10 shadow-[0_0_15px_rgba(244,122,32,0.5)]" />
+                    <div className="flex-1 text-center md:text-left">
+                      {idx % 2 !== 0 ? (
+                        <div className="md:pl-12">
+                          <span className="text-4xl font-black text-brand-orange/20 block mb-2">{item.year}</span>
+                          <p className="text-lg font-bold">{item.event}</p>
+                        </div>
+                      ) : null}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Certification Status */}
+          <div className="space-y-12">
+            <h3 className="text-3xl font-bold text-center">인증서 현황</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {certs.map((cert, idx) => (
+                <motion.div 
+                  key={idx}
+                  whileHover={{ y: -5 }}
+                  className="glass-card p-8 text-center border-brand-orange/10 hover:border-brand-orange/30 transition-all"
+                >
+                  <div className="w-16 h-16 bg-brand-orange/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <ShieldCheck className="text-brand-orange w-8 h-8" />
+                  </div>
+                  <h4 className="text-xl font-bold mb-2">{cert.title}</h4>
+                  <p className="text-xs text-white/40">{cert.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -216,43 +306,46 @@ const Services = () => {
 };
 
 const Portfolio = ({ posts }: { posts: Post[] }) => {
+  const navigate = useNavigate();
   return (
     <section id="portfolio" className="py-24">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-          <div>
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">포트폴리오</h2>
-            <p className="text-white/50">원일인더스트리의 주요 제품 및 시공 사례입니다.</p>
-          </div>
-          <div className="flex gap-4">
-            <span className="text-brand-purple font-bold">All Projects</span>
-            <span className="text-white/30">Products</span>
-            <span className="text-white/30">Case Studies</span>
-          </div>
+        <div className="mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">사업 영역</h2>
+          <p className="text-white/50">원일인더스트리의 주요 제품 및 시공 사례입니다.</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post) => (
-            <motion.div
-              key={post.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="group relative overflow-hidden rounded-2xl aspect-[4/3] glass-card"
-            >
-              <img 
-                src={post.imageUrl} 
-                alt={post.title} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 transition-transform">
-                <span className="text-brand-purple-light text-xs font-bold uppercase tracking-widest mb-2">{post.category}</span>
-                <h3 className="text-2xl font-bold mb-2">{post.title}</h3>
-                <p className="text-white/60 text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">{post.description}</p>
-              </div>
-            </motion.div>
-          ))}
+          {posts.map((post) => {
+            const CardContent = (
+              <>
+                <img 
+                  src={post.imageUrl} 
+                  alt={post.title} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 transition-transform">
+                  <span className="text-brand-orange text-sm font-black uppercase tracking-widest mb-2">{post.category}</span>
+                  <h3 className="text-2xl font-bold mb-2">{post.title}</h3>
+                  <p className="text-white/60 text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">{post.description}</p>
+                </div>
+              </>
+            );
+
+            return (
+              <motion.div
+                key={post.id}
+                onClick={() => navigate(`/product/${post.id}`)}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="group relative overflow-hidden rounded-2xl aspect-[4/3] glass-card cursor-pointer"
+              >
+                {CardContent}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -278,7 +371,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-xs text-white/30 uppercase font-bold tracking-widest">Email</p>
-                  <p className="text-lg">contact@wonil.com</p>
+                  <p className="text-lg">wonil02452@naver.com</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -287,7 +380,16 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-xs text-white/30 uppercase font-bold tracking-widest">Phone</p>
-                  <p className="text-lg">02-1234-5678</p>
+                  <p className="text-lg">031-355-0761</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-brand-purple/10 flex items-center justify-center text-brand-purple">
+                  <Printer className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs text-white/30 uppercase font-bold tracking-widest">Fax</p>
+                  <p className="text-lg">031-355-0762</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -296,36 +398,31 @@ const Contact = () => {
                 </div>
                 <div>
                   <p className="text-xs text-white/30 uppercase font-bold tracking-widest">Office</p>
-                  <p className="text-lg">경기도 안산시 단원구 산업단지로 123</p>
+                  <p className="text-lg">경기도 화성시 주석로80번길 18-14</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="glass-card p-8 md:p-12">
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">이름</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brand-purple outline-none transition-colors" placeholder="홍길동" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">연락처</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brand-purple outline-none transition-colors" placeholder="010-0000-0000" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-white/70">이메일</label>
-                <input type="email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brand-purple outline-none transition-colors" placeholder="example@email.com" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-white/70">문의 내용</label>
-                <textarea rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brand-purple outline-none transition-colors resize-none" placeholder="문의하실 내용을 입력해주세요."></textarea>
-              </div>
-              <button className="w-full py-4 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-xl font-bold transition-all purple-glow">
-                문의 보내기
-              </button>
-            </form>
+          <div className="glass-card p-8 md:p-12 flex flex-col justify-center items-center text-center">
+            <div className="w-20 h-20 rounded-3xl bg-brand-purple/20 flex items-center justify-center text-brand-purple mb-8">
+              <Mail className="w-10 h-10" />
+            </div>
+            <h3 className="text-2xl font-bold mb-4">이메일로 문의하기</h3>
+            <p className="text-white/60 mb-8 max-w-sm">
+              클릭하시면 메일 앱이 실행되어<br />
+              원일인더스트리 담당자에게 바로 메일을 보낼 수 있습니다.
+            </p>
+            <a 
+              href="mailto:wonil02452@naver.com"
+              className="w-full py-5 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-2xl font-bold transition-all purple-glow flex items-center justify-center gap-3 text-lg"
+            >
+              <Mail className="w-5 h-5" />
+              wonil02452@naver.com
+            </a>
+            <p className="mt-6 text-sm text-white/30">
+              보통 24시간 이내에 답변을 드립니다.
+            </p>
           </div>
         </div>
       </div>
@@ -340,7 +437,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="text-xl font-bold tracking-tighter flex items-center gap-3">
             <Logo className="w-12 h-6" />
-            <span>원일<span className="text-brand-purple">인더스트리</span></span>
+            <span>원일<span className="text-brand-orange"> 인더스트리</span></span>
           </div>
           
           <div className="flex gap-8 text-sm text-white/40">
@@ -380,14 +477,14 @@ const AdminDashboard = ({
   onDeletePost: (id: number) => void
 }) => {
   const [activeTab, setActiveTab] = useState<'posts' | 'settings'>('posts');
-  const [newPost, setNewPost] = useState({ title: '', category: '제품소개', description: '', imageUrl: '' });
+  const [newPost, setNewPost] = useState({ title: '', category: '제품소개', description: '', imageUrl: '', linkUrl: '' });
 
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 md:p-8"
+      className="fixed inset-0 z-[100] bg-brand-blue/90 backdrop-blur-xl flex items-center justify-center p-4 md:p-8"
     >
       <div className="w-full max-w-5xl h-full max-h-[800px] glass-card flex flex-col overflow-hidden border-brand-purple/30">
         {/* Header */}
@@ -414,7 +511,7 @@ const AdminDashboard = ({
                 onClick={() => setActiveTab('posts')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'posts' ? 'bg-brand-purple text-white' : 'hover:bg-white/5 text-white/60'}`}
               >
-                <Layout className="w-5 h-5" /> 게시글 관리
+                <Layout className="w-5 h-5" /> 제품 관리
               </button>
               <button 
                 onClick={() => setActiveTab('settings')}
@@ -436,18 +533,18 @@ const AdminDashboard = ({
               <div className="space-y-8">
                 <div className="glass-card p-6 border-brand-purple/20 bg-brand-purple/5">
                   <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                    <Plus className="w-5 h-5 text-brand-purple" /> 새 게시글 추가
+                    <Plus className="w-5 h-5 text-brand-purple" /> 새 제품 추가
                   </h3>
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <input 
                       type="text" 
                       placeholder="제목" 
-                      className="bg-black/40 border border-white/10 rounded-lg px-4 py-2 outline-none focus:border-brand-purple"
+                      className="bg-brand-blue-dark/40 border border-white/10 rounded-lg px-4 py-2 outline-none focus:border-brand-purple"
                       value={newPost.title}
                       onChange={e => setNewPost({...newPost, title: e.target.value})}
                     />
                     <select 
-                      className="bg-black/40 border border-white/10 rounded-lg px-4 py-2 outline-none focus:border-brand-purple"
+                      className="bg-brand-blue-dark/40 border border-white/10 rounded-lg px-4 py-2 outline-none focus:border-brand-purple"
                       value={newPost.category}
                       onChange={e => setNewPost({...newPost, category: e.target.value})}
                     >
@@ -459,13 +556,20 @@ const AdminDashboard = ({
                   <input 
                     type="text" 
                     placeholder="이미지 URL (picsum.photos 등)" 
-                    className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 mb-4 outline-none focus:border-brand-purple"
+                    className="w-full bg-brand-blue-dark/40 border border-white/10 rounded-lg px-4 py-2 mb-4 outline-none focus:border-brand-purple"
                     value={newPost.imageUrl}
                     onChange={e => setNewPost({...newPost, imageUrl: e.target.value})}
                   />
+                  <input 
+                    type="text" 
+                    placeholder="링크 URL (선택 사항)" 
+                    className="w-full bg-brand-blue-dark/40 border border-white/10 rounded-lg px-4 py-2 mb-4 outline-none focus:border-brand-purple"
+                    value={newPost.linkUrl}
+                    onChange={e => setNewPost({...newPost, linkUrl: e.target.value})}
+                  />
                   <textarea 
                     placeholder="설명" 
-                    className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 mb-4 outline-none focus:border-brand-purple resize-none"
+                    className="w-full bg-brand-blue-dark/40 border border-white/10 rounded-lg px-4 py-2 mb-4 outline-none focus:border-brand-purple resize-none"
                     rows={3}
                     value={newPost.description}
                     onChange={e => setNewPost({...newPost, description: e.target.value})}
@@ -474,7 +578,7 @@ const AdminDashboard = ({
                     onClick={() => {
                       if (newPost.title && newPost.imageUrl) {
                         onAddPost(newPost);
-                        setNewPost({ title: '', category: '제품소개', description: '', imageUrl: '' });
+                        setNewPost({ title: '', category: '제품소개', description: '', imageUrl: '', linkUrl: '' });
                       }
                     }}
                     className="px-6 py-2 bg-brand-purple hover:bg-brand-purple-dark rounded-lg font-bold transition-all"
@@ -484,7 +588,7 @@ const AdminDashboard = ({
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="text-lg font-bold">현재 게시글 목록 ({posts.length})</h3>
+                  <h3 className="text-lg font-bold">현재 제품 목록 ({posts.length})</h3>
                   <div className="grid gap-4">
                     {posts.map(post => (
                       <div key={post.id} className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all">
@@ -520,11 +624,11 @@ const AdminDashboard = ({
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm text-white/60">회사 이름</label>
-                      <input type="text" defaultValue="원일인더스트리" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 outline-none" />
+                      <input type="text" defaultValue="원일인더스트리" className="w-full bg-brand-blue-dark/40 border border-white/10 rounded-lg px-4 py-2 outline-none" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm text-white/60">메인 히어로 타이틀</label>
-                      <input type="text" defaultValue="공간의 가치를 높이는 혁신적인 바닥재 솔루션" className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2 outline-none" />
+                      <input type="text" defaultValue="공간의 가치를 높이는 이중바닥재 부품 전문기업" className="w-full bg-brand-blue-dark/40 border border-white/10 rounded-lg px-4 py-2 outline-none" />
                     </div>
                     <button className="flex items-center gap-2 px-6 py-3 bg-brand-purple hover:bg-brand-purple-dark rounded-lg font-bold transition-all">
                       <Save className="w-5 h-5" /> 설정 저장
@@ -540,9 +644,121 @@ const AdminDashboard = ({
   );
 };
 
+// --- Product Detail Page ---
+
+const ProductDetail = ({ posts }: { posts: Post[] }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const post = posts.find(p => p.id === Number(id));
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-brand-blue flex flex-col items-center justify-center p-6 text-center">
+        <h2 className="text-4xl font-bold mb-4">제품을 찾을 수 없습니다.</h2>
+        <button 
+          onClick={() => navigate('/')}
+          className="px-8 py-3 bg-brand-purple rounded-xl font-bold hover:bg-brand-purple-dark transition-all"
+        >
+          홈으로 돌아가기
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-brand-blue pt-32 pb-24">
+      <div className="max-w-5xl mx-auto px-6">
+        <motion.button 
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-white/60 hover:text-brand-orange mb-8 transition-colors group"
+        >
+          <X className="w-5 h-5 group-hover:rotate-90 transition-transform" /> 뒤로 가기
+        </motion.button>
+
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-3xl overflow-hidden glass-card aspect-square"
+          >
+            <img 
+              src={post.imageUrl} 
+              alt={post.title} 
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="space-y-8"
+          >
+            <div>
+              <span className="inline-block px-4 py-1 bg-brand-orange/20 text-brand-orange rounded-full text-xs font-bold uppercase tracking-widest mb-4">
+                {post.category}
+              </span>
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">{post.title}</h1>
+              <div className="h-1 w-20 bg-brand-orange rounded-full mb-8" />
+              <p className="text-xl text-white/70 leading-relaxed whitespace-pre-wrap">
+                {post.description}
+              </p>
+            </div>
+
+            <div className="p-8 glass-card border-brand-orange/20 bg-brand-orange/5 space-y-6">
+              <h3 className="text-xl font-bold flex items-center gap-2">
+                <ShieldCheck className="text-brand-orange" /> 주요 특장점
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  "최고급 소재 사용으로 내구성 극대화",
+                  "정밀 설계를 통한 완벽한 수평 유지",
+                  "다양한 산업 현장 맞춤형 솔루션 제공",
+                  "철저한 품질 관리 및 유지보수 지원"
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-3 text-white/80">
+                    <div className="w-1.5 h-1.5 rounded-full bg-brand-orange mt-2 shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {post.linkUrl && (
+              <a 
+                href={post.linkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-5 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-2xl font-bold transition-all purple-glow flex items-center justify-center gap-3 text-lg"
+              >
+                공식 홈페이지에서 보기 <ExternalLink className="w-5 h-5" />
+              </a>
+            )}
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Main App ---
 
 export default function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  );
+}
+
+function AppContent() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [settings, setSettings] = useState<Settings>({});
   const [isAdminOpen, setIsAdminOpen] = useState(false);
@@ -593,7 +809,7 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-brand-blue flex items-center justify-center">
         <motion.div 
           animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
           transition={{ repeat: Infinity, duration: 2 }}
@@ -607,12 +823,17 @@ export default function App() {
     <div className="selection:bg-brand-purple/30">
       <Navbar onAdminClick={() => setIsAdminOpen(true)} />
       
-      <main>
-        <Hero />
-        <Services />
-        <Portfolio posts={posts} />
-        <Contact />
-      </main>
+      <Routes>
+        <Route path="/" element={
+          <main>
+            <Hero />
+            <CompanyIntro />
+            <Portfolio posts={posts} />
+            <Contact />
+          </main>
+        } />
+        <Route path="/product/:id" element={<ProductDetail posts={posts} />} />
+      </Routes>
 
       <Footer />
 

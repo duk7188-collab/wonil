@@ -17,6 +17,7 @@ db.exec(`
     category TEXT NOT NULL,
     description TEXT,
     imageUrl TEXT,
+    linkUrl TEXT,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -29,10 +30,10 @@ db.exec(`
 // Seed initial data if empty
 const postCount = db.prepare("SELECT COUNT(*) as count FROM posts").get() as { count: number };
 if (postCount.count === 0) {
-  const insertPost = db.prepare("INSERT INTO posts (title, category, description, imageUrl) VALUES (?, ?, ?, ?)");
-  insertPost.run("고강도 알루미늄 다이캐스팅 페데스탈", "제품소개", "정밀한 가공과 고강도 설계를 통해 안정적인 하중 지지력을 제공합니다.", "https://picsum.photos/seed/wonil1/800/600");
-  insertPost.run("친환경 스틸 판넬 시스템", "시공사례", "재활용 가능한 소재를 사용한 친환경 이중바닥재 솔루션입니다.", "https://picsum.photos/seed/wonil2/800/600");
-  insertPost.run("스마트 오피스 통합 배선 솔루션", "기술자료", "복잡한 배선을 깔끔하게 정리하고 유지보수가 용이한 시스템입니다.", "https://picsum.photos/seed/wonil3/800/600");
+  const insertPost = db.prepare("INSERT INTO posts (title, category, description, imageUrl, linkUrl) VALUES (?, ?, ?, ?, ?)");
+  insertPost.run("이중 바닥재 부품 제조", "사업영역", "이중바닥재(Access Floor) 시스템의 핵심 부품을 전문적으로 생산", "https://www.accessfloorstore.com/upload/20190531/6369492138484888663112118.png", null);
+  insertPost.run("클린룸 ·AI 데이터센터·반도체 산업", "시공사례", "삼성전자 우면 서울R&D캠퍼스, 송도 포스코 타워, 신한울 원자력 발전소, 세종시 종합 정부 청사 등 다수 시공", "https://santatechnology.com/images/products/catalog/AAAAAA/Raise%20floors%20installation.jpg", "https://www.naver.com");
+  insertPost.run("설계·시공·유지관리", "토탈 솔루션", "액세스 플로어 설계 및 구조 컨설팅, 시공 및 설치, 유지관리 및 리모델링", "https://www.mistershademe.com/wp-content/uploads/2020/03/Raised-Floor-1.jpg", null);
 }
 
 async function startServer() {
@@ -48,8 +49,8 @@ async function startServer() {
   });
 
   app.post("/api/posts", (req, res) => {
-    const { title, category, description, imageUrl } = req.body;
-    const result = db.prepare("INSERT INTO posts (title, category, description, imageUrl) VALUES (?, ?, ?, ?)").run(title, category, description, imageUrl);
+    const { title, category, description, imageUrl, linkUrl } = req.body;
+    const result = db.prepare("INSERT INTO posts (title, category, description, imageUrl, linkUrl) VALUES (?, ?, ?, ?, ?)").run(title, category, description, imageUrl, linkUrl);
     res.json({ id: result.lastInsertRowid });
   });
 
