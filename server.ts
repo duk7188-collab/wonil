@@ -29,11 +29,14 @@ db.exec(`
 
 // Seed initial data if empty
 const postCount = db.prepare("SELECT COUNT(*) as count FROM posts").get() as { count: number };
+console.log(`Current post count: ${postCount.count}`);
 if (postCount.count === 0) {
+  console.log("Seeding initial data...");
   const insertPost = db.prepare("INSERT INTO posts (title, category, description, imageUrl, linkUrl) VALUES (?, ?, ?, ?, ?)");
-  insertPost.run("이중 바닥재 부품 제조", "사업영역", "이중바닥재(Access Floor) 시스템의 핵심 부품을 전문적으로 생산", "https://www.accessfloorstore.com/upload/20190531/6369492138484888663112118.png", null);
+  insertPost.run("이중 바닥재 부품 제조", "제품소개", "이중바닥재(Access Floor) 시스템의 핵심 부품을 전문적으로 생산", "https://www.accessfloorstore.com/upload/20190531/6369492138484888663112118.png", null);
   insertPost.run("클린룸 ·AI 데이터센터·반도체 산업", "시공사례", "삼성전자 우면 서울R&D캠퍼스, 송도 포스코 타워, 신한울 원자력 발전소, 세종시 종합 정부 청사 등 다수 시공", "https://santatechnology.com/images/products/catalog/AAAAAA/Raise%20floors%20installation.jpg", "https://www.naver.com");
-  insertPost.run("설계·시공·유지관리", "토탈 솔루션", "액세스 플로어 설계 및 구조 컨설팅, 시공 및 설치, 유지관리 및 리모델링", "https://www.mistershademe.com/wp-content/uploads/2020/03/Raised-Floor-1.jpg", null);
+  insertPost.run("설계·시공·유지관리", "기술자료", "액세스 플로어 설계 및 구조 컨설팅, 시공 및 설치, 유지관리 및 리모델링", "https://www.mistershademe.com/wp-content/uploads/2020/03/Raised-Floor-1.jpg", null);
+  console.log("Seeding complete.");
 }
 
 async function startServer() {
@@ -46,6 +49,19 @@ async function startServer() {
   app.get("/api/posts", (req, res) => {
     const posts = db.prepare("SELECT * FROM posts ORDER BY createdAt DESC").all();
     res.json(posts);
+  });
+
+  app.post("/api/posts/seed", (req, res) => {
+    const postCount = db.prepare("SELECT COUNT(*) as count FROM posts").get() as { count: number };
+    if (postCount.count === 0) {
+      const insertPost = db.prepare("INSERT INTO posts (title, category, description, imageUrl, linkUrl) VALUES (?, ?, ?, ?, ?)");
+      insertPost.run("이중 바닥재 부품 제조", "제품소개", "이중바닥재(Access Floor) 시스템의 핵심 부품을 전문적으로 생산", "https://www.accessfloorstore.com/upload/20190531/6369492138484888663112118.png", null);
+      insertPost.run("클린룸 ·AI 데이터센터·반도체 산업", "시공사례", "삼성전자 우면 서울R&D캠퍼스, 송도 포스코 타워, 신한울 원자력 발전소, 세종시 종합 정부 청사 등 다수 시공", "https://santatechnology.com/images/products/catalog/AAAAAA/Raise%20floors%20installation.jpg", "https://www.naver.com");
+      insertPost.run("설계·시공·유지관리", "기술자료", "액세스 플로어 설계 및 구조 컨설팅, 시공 및 설치, 유지관리 및 리모델링", "https://www.mistershademe.com/wp-content/uploads/2020/03/Raised-Floor-1.jpg", null);
+      res.json({ success: true, message: "Initial data seeded" });
+    } else {
+      res.status(400).json({ success: false, message: "Database already has data" });
+    }
   });
 
   app.post("/api/posts", (req, res) => {

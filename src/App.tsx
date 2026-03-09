@@ -184,15 +184,19 @@ const Hero = () => {
 const CompanyIntro = () => {
   const history = [
     { year: "2026", event: "AI 데이터센터 전용 내진용, 고하중 이중바닥재 부품 개발" },
+    { year: "2025", event: "기술평가 우수기업 인증서 획득" },
     { year: "2025", event: "내진 성능이 개선된 액세스 플로어 구조 특허출원" },
     { year: "2025", event: "㈜원일인더스트리 법인 설립 및 공장 확장 이전" },
     { year: "2024", event: "AI 데이터센터 전용 고하중 이중바닥재 부품 개발" },
+    { year: "2020", event: "스마트 팩토리 생산 라인 자동화 구축" },
+    { year: "2015", event: "해외 수출 500만불 달성 및 글로벌 파트너십 체결" },
     { year: "2014", event: "ISO9001, ISO14001 인증 획득" },
     { year: "2009", event: "신월성 원자력 1호기 현장 납품" },
     { year: "2008", event: "10월 원일산업 설립" },
   ];
 
   const certs = [
+    { title: "기술평가 우수기업", desc: "NICE평가정보 기술역량 우수기업 인증" },
     { title: "ISO 9001", desc: "품질경영시스템 인증" },
     { title: "ISO 14001", desc: "환경경영시스템 인증" },
     { title: "KS 인증", desc: "한국산업표준 제품 인증" },
@@ -307,45 +311,71 @@ const CompanyIntro = () => {
 
 const Portfolio = ({ posts }: { posts: Post[] }) => {
   const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState('전체');
+  const categories = ['전체', '제품소개', '시공사례', '기술자료'];
+
+  const filteredPosts = selectedCategory === '전체' 
+    ? posts 
+    : posts.filter(post => post.category === selectedCategory);
+
   return (
     <section id="portfolio" className="py-24">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">사업 영역</h2>
-          <p className="text-white/50">원일인더스트리의 주요 제품 및 시공 사례입니다.</p>
+        <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
+          <div>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">사업 영역</h2>
+            <p className="text-white/50">원일인더스트리의 주요 제품 및 시공 사례입니다.</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${selectedCategory === cat ? 'bg-brand-orange text-white' : 'bg-white/5 text-white/40 hover:bg-white/10'}`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post) => {
-            const CardContent = (
-              <>
-                <img 
-                  src={post.imageUrl} 
-                  alt={post.title} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 transition-transform">
-                  <span className="text-brand-orange text-sm font-black uppercase tracking-widest mb-2">{post.category}</span>
-                  <h3 className="text-2xl font-bold mb-2">{post.title}</h3>
-                  <p className="text-white/60 text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">{post.description}</p>
-                </div>
-              </>
-            );
+          {filteredPosts.length > 0 ? (
+            filteredPosts.map((post) => {
+              const CardContent = (
+                <>
+                  <img 
+                    src={post.imageUrl} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 transition-transform">
+                    <span className="text-brand-orange text-sm font-black uppercase tracking-widest mb-2">{post.category}</span>
+                    <h3 className="text-2xl font-bold mb-2">{post.title}</h3>
+                    <p className="text-white/60 text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">{post.description}</p>
+                  </div>
+                </>
+              );
 
-            return (
-              <motion.div
-                key={post.id}
-                onClick={() => navigate(`/product/${post.id}`)}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="group relative overflow-hidden rounded-2xl aspect-[4/3] glass-card cursor-pointer"
-              >
-                {CardContent}
-              </motion.div>
-            );
-          })}
+              return (
+                <motion.div
+                  key={post.id}
+                  onClick={() => navigate(`/product/${post.id}`)}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  className="group relative overflow-hidden rounded-2xl aspect-[4/3] glass-card cursor-pointer"
+                >
+                  {CardContent}
+                </motion.div>
+              );
+            })
+          ) : (
+            <div className="col-span-full py-20 text-center glass-card border-dashed border-white/10">
+              <p className="text-white/40 italic">'{selectedCategory}' 카테고리에 등록된 데이터가 없습니다.</p>
+            </div>
+          )}
         </div>
       </div>
     </section>
@@ -469,12 +499,14 @@ const AdminDashboard = ({
   posts, 
   onClose, 
   onAddPost, 
-  onDeletePost 
+  onDeletePost,
+  onRestoreDefaults
 }: { 
   posts: Post[], 
   onClose: () => void,
   onAddPost: (post: Omit<Post, 'id' | 'createdAt'>) => void,
-  onDeletePost: (id: number) => void
+  onDeletePost: (id: number) => void,
+  onRestoreDefaults: () => void
 }) => {
   const [activeTab, setActiveTab] = useState<'posts' | 'settings'>('posts');
   const [newPost, setNewPost] = useState({ title: '', category: '제품소개', description: '', imageUrl: '', linkUrl: '' });
@@ -588,7 +620,17 @@ const AdminDashboard = ({
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="text-lg font-bold">현재 제품 목록 ({posts.length})</h3>
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-bold">현재 제품 목록 ({posts.length})</h3>
+                    {posts.length === 0 && (
+                      <button 
+                        onClick={onRestoreDefaults}
+                        className="text-xs px-3 py-1 bg-white/10 hover:bg-white/20 rounded-lg transition-all border border-white/10"
+                      >
+                        기본 데이터 복구
+                      </button>
+                    )}
+                  </div>
                   <div className="grid gap-4">
                     {posts.map(post => (
                       <div key={post.id} className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/10 hover:border-white/20 transition-all">
@@ -807,6 +849,15 @@ function AppContent() {
     }
   };
 
+  const handleRestoreDefaults = async () => {
+    try {
+      const res = await fetch('/api/posts/seed', { method: 'POST' });
+      if (res.ok) fetchData();
+    } catch (err) {
+      console.error('Failed to restore defaults', err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-brand-blue flex items-center justify-center">
@@ -844,6 +895,7 @@ function AppContent() {
             onClose={() => setIsAdminOpen(false)} 
             onAddPost={handleAddPost}
             onDeletePost={handleDeletePost}
+            onRestoreDefaults={handleRestoreDefaults}
           />
         )}
       </AnimatePresence>
