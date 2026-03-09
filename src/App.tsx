@@ -258,7 +258,7 @@ const CompanyIntro = () => {
                     viewport={{ once: true }}
                     className={`flex flex-col md:flex-row items-center gap-8 ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
                   >
-                    <div className="flex-1 text-center md:text-right">
+                    <div className={`flex-1 text-center md:text-right order-1 md:order-none ${idx % 2 === 0 ? '' : 'hidden md:block'}`}>
                       {idx % 2 === 0 ? (
                         <div className="md:pr-12">
                           <span className="text-4xl font-black text-brand-orange/20 block mb-2">{item.year}</span>
@@ -266,8 +266,8 @@ const CompanyIntro = () => {
                         </div>
                       ) : null}
                     </div>
-                    <div className="w-4 h-4 rounded-full bg-brand-orange relative z-10 shadow-[0_0_15px_rgba(244,122,32,0.5)]" />
-                    <div className="flex-1 text-center md:text-left">
+                    <div className="w-4 h-4 rounded-full bg-brand-orange relative z-10 shadow-[0_0_15px_rgba(244,122,32,0.5)] order-2 md:order-none" />
+                    <div className={`flex-1 text-center md:text-left order-1 md:order-none ${idx % 2 !== 0 ? '' : 'hidden md:block'}`}>
                       {idx % 2 !== 0 ? (
                         <div className="md:pl-12">
                           <span className="text-4xl font-black text-brand-orange/20 block mb-2">{item.year}</span>
