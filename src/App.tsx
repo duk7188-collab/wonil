@@ -496,14 +496,12 @@ const AdminDashboard = ({
   posts, 
   onClose, 
   onAddPost, 
-  onDeletePost,
-  onRestoreDefaults
+  onDeletePost
 }: { 
   posts: Post[], 
   onClose: () => void,
   onAddPost: (post: Omit<Post, 'id' | 'createdAt'>) => void,
-  onDeletePost: (id: number) => void,
-  onRestoreDefaults: () => void
+  onDeletePost: (id: number) => void
 }) => {
   const [activeTab, setActiveTab] = useState<'posts' | 'settings'>('posts');
   const [newPost, setNewPost] = useState({ title: '', category: '제품소개', description: '', imageUrl: '', linkUrl: '' });
@@ -619,14 +617,6 @@ const AdminDashboard = ({
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <h3 className="text-lg font-bold">현재 제품 목록 ({posts.length})</h3>
-                    {posts.length === 0 && (
-                      <button 
-                        onClick={onRestoreDefaults}
-                        className="text-xs px-3 py-1 bg-white/10 hover:bg-white/20 rounded-lg transition-all border border-white/10"
-                      >
-                        기본 데이터 복구
-                      </button>
-                    )}
                   </div>
                   <div className="grid gap-4">
                     {posts.map(post => (
@@ -846,15 +836,6 @@ function AppContent() {
     }
   };
 
-  const handleRestoreDefaults = async () => {
-    try {
-      const res = await fetch('/api/posts/seed', { method: 'POST' });
-      if (res.ok) fetchData();
-    } catch (err) {
-      console.error('Failed to restore defaults', err);
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-brand-blue flex items-center justify-center">
@@ -892,7 +873,6 @@ function AppContent() {
             onClose={() => setIsAdminOpen(false)} 
             onAddPost={handleAddPost}
             onDeletePost={handleDeletePost}
-            onRestoreDefaults={handleRestoreDefaults}
           />
         )}
       </AnimatePresence>
